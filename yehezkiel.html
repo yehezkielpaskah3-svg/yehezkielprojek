@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Manajemen Data Mahasiswa — Login</title>
+    <style>
+        :root {
+            --bg: linear-gradient(180deg, #e6f0ff 0%, #f8fafc 100%);
+            --card: #fff;
+            --muted: #6b7280;
+            --primary: #2563eb;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        /* --- PERUBAHAN UTAMA UNTUK LOGIN DI TENGAH --- */
+        body {
+            font-family: Inter, system-ui, Roboto, Arial;
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: #0f172a;
+            display: flex;
+            /* Mengaktifkan Flexbox untuk Body */
+            align-items: center;
+            /* Pusat vertikal */
+            justify-content: center;
+            /* Pusat horizontal */
+            padding: 28px;
+        }
+
+        .center {
+            /* Dihapus karena body sekarang menengahkan konten */
+            display: block;
+        }
+
+        .window {
+            width: 100%;
+            max-width: 1100px
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 28px;
+            /* Tambah padding login card */
+            box-shadow: 0 8px 24px rgba(2, 6, 23, 0.1);
+        }
+
+        .login-wrap {
+            max-width: 400px;
+            /* Lebar maksimal untuk form login */
+            width: 100%;
+            /* Hapus properti flex yang sebelumnya membagi 2 kolom */
+        }
+
+        .login-left {
+            padding: 0;
+            background: none;
+        }
+
+        .login-right {
+            display: none;
+            /* Hapus panel abu-abu/cover */
+        }
+
+        /* --- AKHIR PERUBAHAN LOGIN --- */
+
+        h1,
+        h2,
+        h3 {
+            margin: 0 0 10px 0
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input[type=text],
+        input[type=password],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border-radius: 8px;
+            border: 1px solid #e6eef8;
+            font-size: 14px
+        }
+
+        button {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid #e6eef8
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 18px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 14px
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #f1f5f9;
+            text-align: left
+        }
+
+        th {
+            background: linear-gradient(90deg, rgba(37, 99, 235, 0.06), rgba(37, 99, 235, 0.02));
+            font-weight: 600
+        }
+
+        .log {
+            background: #fbfdff;
+            padding: 10px;
+            border-radius: 8px;
+            max-height: 140px;
+            overflow: auto;
+            font-size: 13px;
+            color: #0f172a
+        }
+
+        .small {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .highlight {
+            background: #fff7ed
+        }
+
+        /* --- PENTING: Topbar untuk memastikan User dan Logout berdampingan --- */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px
+        }
+
+        /* Memastikan elemen badge (User) dan tombol Logout berada dalam flex container */
+        .topbar>div:last-child {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), #0b61d6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700
+        }
+
+        @media(max-width:980px) {
+            body {
+                align-items: flex-start;
+                /* Jangan terlalu di tengah di layar kecil */
+            }
+
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            .login-wrap {
+                /* Sudah tidak perlu karena login-right sudah di-display: none */
+                /* flex-direction: column; */
+            }
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="loginWrap" class="login-wrap card">
+        <div class="login-left" aria-live="polite">
+            <h2>Login — Manajemen Data Mahasiswa</h2>
+            <div class="muted" style="margin-bottom:12px">Masukkan nama dan password untuk membuka aplikasi.
+            </div>
+
+            <label for="loginName">Nama</label>
+            <input id="loginName" type="text" placeholder="Contoh: yehezkiel" autocomplete="username">
+
+            <label for="loginPass" style="margin-top:8px">Password</label>
+            <input id="loginPass" type="password" placeholder="Password" autocomplete="current-password">
+
+            <div style="display:flex;gap:10px;margin-top:16px">
+                <button class="btn-primary" onclick="doLogin()">Masuk</button>
+                <button class="btn-ghost" onclick="fillDemo()">Isi contoh</button>
+            </div>
+
+            <div id="loginError" class="small" style="color:#b91c1c;margin-top:10px"></div>
+            <div class="small" style="margin-top:10px; padding-top:10px; border-top: 1px solid #f1f5f9">Default:
+                <strong>yehezkiel</strong> / <strong>150406</strong>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="app" class="card" style="display:none; margin-top:18px; max-width: 1100px;">
+        <div class="topbar">
+            <div style="display:flex;align-items:center;gap:12px">
+                <div class="logo">MD</div>
+                <div>
+                    <h1>Manajemen Data Mahasiswa</h1>
+                    <div class="muted">CRUD • Sort • Search • File I/O • OOP • Validasi</div>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+                <div class="small muted">User: <strong id="userBadge"></strong></div>
+                <button class="btn-ghost" onclick="doLogout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="layout">
+            <div>
+                <div class="card">
+                    <h3>Tambah / Edit Mahasiswa</h3>
+                    <form id="studentForm" onsubmit="return false">
+                        <input type="hidden" id="editIndex">
+                        <label>Nama</label>
+                        <input id="nameInput" type="text" placeholder="Nama lengkap">
+                        <label>NIM</label>
+                        <input id="nimInput" type="text" placeholder="241011402104">
+
+                        <div class="small muted" style="margin-top:6px">Regex: Nama (huruf/angka/spasi . _ - '),
+                            NIM 9–12 digit</div>
+
+                        <div style="display:flex;gap:8px;margin-top:12px">
+                            <button id="addBtn" class="btn-primary">Tambah</button>
+                            <button id="saveBtn" class="btn-primary" style="display:none">Simpan</button>
+                            <button id="cancelBtn" class="btn-ghost" style="display:none">Batal</button>
+                        </div>
+                    </form>
+
+                    <hr style="margin:12px 0;border:none;border-top:1px solid #f1f5f9">
+
+                    <h4>Sort & Search</h4>
+                    <label>Urutkan berdasarkan</label>
+                    <select id="sortField">
+                        <option value="nim">NIM</option>
+                        <option value="name">Nama</option>
+                    </select>
+
+                    <label style="margin-top:8px">Algoritma pengurutan</label>
+                    <select id="sortAlgo">
+                        <option value="insertion">Insertion</option>
+                        <option value="merge">Merge</option>
+                        <option value="bubble">Bubble</option>
+                        <option value="selection">Selection</option>
+                    </select>
+                    <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                        <button id="sortBtn" class="btn-primary">Urutkan</button>
+                        <div id="sortComplexity" class="small muted"></div>
+                    </div>
+
+                    <label style="margin-top:10px">Cari (NIM / Nama)</label>
+                    <input id="searchInput" type="text" placeholder="Masukkan keyword...">
+                    <label style="margin-top:6px">Algoritma pencarian</label>
+                    <select id="searchAlgo">
+                        <option value="linear">Linear</option>
+                        <option value="binary">Binary (butuh sorted by NIM)</option>
+                        <option value="sequential">Sequential (alias Linear)</option>
+                    </select>
+                    <div style="display:flex;gap:8px;margin-top:8px">
+                        <button id="searchBtn" class="btn-primary">Cari</button>
+                        <button id="clearSearchBtn" class="btn-ghost">Reset</button>
+                    </div>
+
+                    <hr style="margin:12px 0;border:none;border-top:1px solid #f1f5f9">
+
+                    <h4>File I/O</h4>
+                    <div style="display:flex;gap:8px;align-items:center">
+                        <button id="downloadBtn" class="btn-primary">Download JSON</button>
+                        <input id="fileInput" type="file" accept=".json" style="flex:1;padding:6px">
+                        <button id="uploadBtn" class="btn-ghost">Upload JSON</button>
+                    </div>
+
+                    <hr style="margin:12px 0;border:none;border-top:1px solid #f1f5f9">
+                    <h4>Status & Log</h4>
+                    <div id="status" class="muted small">Siap.</div>
+                    <div id="log" class="log" aria-live="polite"></div>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <h3>Daftar Mahasiswa <span class="small muted" id="countInfo"></span></h3>
+                        <div style="display:flex;gap:8px">
+                            <button id="loadSampleBtn" class="btn-ghost">Load Sample</button>
+                            <button id="clearAllBtn" class="btn-danger">Hapus Semua</button>
+                        </div>
+                    </div>
+
+                    <table id="studentsTable" aria-describedby="countInfo">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Nama</th>
+                                <th>NIM</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <hr style="margin:12px 0;border:none;border-top:1px solid #f1f5f9">
+                    <h4>Estimasi Time Complexity</h4>
+                    <ul class="small muted">
+                        <li>Insertion Sort: O(n²) (worst), O(n) (best)</li>
+                        <li>Merge Sort: O(n log n)</li>
+                        <li>Bubble Sort: O(n²)</li>
+                        <li>Selection Sort: O(n²)</li>
+                        <li>Linear/Sequential Search: O(n)</li>
+                        <li>Binary Search: O(log n)</li>
+                    </ul>
+
+                    <div class="small muted" style="margin-top:10px">
+                        Guidelines: camelCase variables, PascalCase classes, modular functions, comments. Errors
+                        handled with AppException.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ===========================
+            Single-file app JS
+            - Login (client-side)
+            ...
+            =========================== */
+
+        /* -------------------------
+            Embedded cover image (data URI)
+            ------------------------- */
+        // Menghapus inisialisasi cover image yang sudah tidak ada
+        // const coverDataUri = "...";
+        // document.getElementById('loginCover').style.backgroundImage = `url('${coverDataUri}')`;
+
+        /* -------------------------
+            Custom exception
+            ------------------------- */
+        class AppException extends Error { constructor(m) { super(m); this.name = 'AppException'; } }
+
+        /* -------------------------
+            OOP classes
+            ------------------------- */
+        class Person {
+            constructor(name) { this.setName(name); }
+            setName(name) {
+                if (typeof name !== 'string' || !name.trim()) throw new AppException('Nama tidak boleh kosong.');
+                const nameRegex = /^[\p{L}\d ._'\-]+$/u;
+                if (!nameRegex.test(name.trim())) throw new AppException('Nama mengandung karakter tidak valid.');
+                this._name = name.trim();
+            }
+            getName() { return this._name; }
+        }
+
+        class Student extends Person {
+            constructor(name, nim) { super(name); this.setNim(nim); }
+            setNim(nim) {
+                if (typeof nim !== 'string') nim = String(nim);
+                const nimRegex = /^\d{9,12}$/;
+                if (!nimRegex.test(nim.trim())) throw new AppException('NIM harus 9–12 digit angka.');
+                this._nim = nim.trim();
+            }
+            getNim() { return this._nim; }
+            toJSON() { return { name: this._name, nim: this._nim }; }
+            toString() { return `${this._name} (${this._nim})`; }
+        }
+
+        /* -------------------------
+            StudentManager (array-based)
+            ------------------------- */
+        class StudentManager {
+            constructor() { this.students = []; this.logMsgs = []; this.isSortedByNim = false; }
+            log(m) { this.logMsgs.unshift(`[${new Date().toLocaleTimeString()}] ${m}`); updateLogUI(); }
+            addStudent(name, nim) {
+                const s = new Student(name, nim);
+                if (this.students.some(st => st.getNim() === s.getNim())) throw new AppException('NIM sudah ada.');
+                this.students.push(s); this.isSortedByNim = false; this.log('Tambah: ' + s.toString());
+                saveToLocal(); updateTableUI();
+            }
+            editStudent(index, newName, newNim) {
+                if (!Number.isInteger(index) || index < 0 || index >= this.students.length) throw new AppException('Index edit tidak valid.');
+                const other = this.students.filter((_, i) => i !== index);
+                if (other.some(st => st.getNim() === String(newNim).trim())) throw new AppException('NIM sudah dipakai.');
+                const tmp = new Student(newName, newNim);
+                this.students[index].setName(tmp.getName());
+                this.students[index].setNim(tmp.getNim());
+                this.isSortedByNim = false; this.log('Edit index ' + index + ': ' + tmp.toString());
+                saveToLocal(); updateTableUI();
+            }
+            deleteStudent(index) {
+                if (!Number.isInteger(index) || index < 0 || index >= this.students.length) throw new AppException('Index hapus tidak valid.');
+                const rem = this.students.splice(index, 1)[0]; this.isSortedByNim = false; this.log('Hapus: ' + rem.toString());
+                saveToLocal(); updateTableUI();
+            }
+            clearAll() { this.students = []; this.isSortedByNim = false; this.log('Semua data dihapus.'); saveToLocal(); updateTableUI(); }
+            getAll() { return this.students.slice(); }
+            comparatorFactory(field) { if (field === 'nim') return (a, b) => Number(a.getNim()) - Number(b.getNim()); return (a, b) => a.getName().localeCompare(b.getName(), undefined, { sensitivity: 'base' }); }
+
+            insertionSort(field = 'nim') { const comp = this.comparatorFactory(field); const arr = this.students; for (let i = 1; i < arr.length; i++) { let j = i - 1; const key = arr[i]; while (j >= 0 && comp(arr[j], key) > 0) { arr[j + 1] = arr[j]; j--; } arr[j + 1] = key; } this.isSortedByNim = (field === 'nim'); this.log('Diurutkan (Insertion) by ' + field); saveToLocal(); updateTableUI(); }
+
+            mergeSort(field = 'nim') { const comp = this.comparatorFactory(field); const merge = (L, R) => { const out = []; let i = 0, j = 0; while (i < L.length && j < R.length) { if (comp(L[i], R[j]) <= 0) out.push(L[i++]); else out.push(R[j++]); } while (i < L.length) out.push(L[i++]); while (j < R.length) out.push(R[j++]); return out; }; const ms = (arr) => { if (arr.length <= 1) return arr; const mid = Math.floor(arr.length / 2); return merge(ms(arr.slice(0, mid)), ms(arr.slice(mid))); }; this.students = ms(this.students); this.isSortedByNim = (field === 'nim'); this.log('Diurutkan (Merge) by ' + field); saveToLocal(); updateTableUI(); }
+
+            bubbleSort(field = 'nim') { const comp = this.comparatorFactory(field); const arr = this.students; for (let i = 0; i < arr.length - 1; i++) for (let j = 0; j < arr.length - 1 - i; j++) if (comp(arr[j], arr[j + 1]) > 0) [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]; this.isSortedByNim = (field === 'nim'); this.log('Diurutkan (Bubble) by ' + field); saveToLocal(); updateTableUI(); }
+
+            selectionSort(field = 'nim') { const comp = this.comparatorFactory(field); const arr = this.students; for (let i = 0; i < arr.length - 1; i++) { let minIdx = i; for (let j = i + 1; j < arr.length; j++) if (comp(arr[j], arr[minIdx]) < 0) minIdx = j; if (minIdx !== i) [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]]; } this.isSortedByNim = (field === 'nim'); this.log('Diurutkan (Selection) by ' + field); saveToLocal(); updateTableUI(); }
+
+            linearSearch(query) { const q = String(query).trim().toLowerCase(); if (!q) return []; const res = []; this.students.forEach((st, idx) => { if (st.getNim().toLowerCase().includes(q) || st.getName().toLowerCase().includes(q)) res.push(idx); }); this.log('Linear search "' + query + '" => ' + res.length + ' found'); return res; }
+
+            binarySearchByNim(targetNim) { if (!this.isSortedByNim) throw new AppException('Binary search butuh data terurut by NIM.'); let left = 0, right = this.students.length - 1; const t = String(targetNim).trim(); while (left <= right) { const mid = Math.floor((left + right) / 2); const midNim = this.students[mid].getNim(); if (midNim === t) { this.log('Binary found ' + t + ' at ' + mid); return mid; } else if (Number(midNim) < Number(t)) left = mid + 1; else right = mid - 1; } this.log('Binary not found ' + t); return -1; }
+
+            exportJSON() { return JSON.stringify(this.students.map(s => s.toJSON()), null, 2); }
+
+            importJSON(jsonStr) {
+                try {
+                    const arr = JSON.parse(jsonStr);
+                    if (!Array.isArray(arr)) throw new AppException('Format JSON harus array.');
+                    const newStudents = arr.map(it => new Student(it.name || it.nama, String(it.nim || it.nim)));
+                    const nims = newStudents.map(s => s.getNim()); const dup = nims.find((v, i) => nims.indexOf(v) !== i);
+                    if (dup) throw new AppException('Terdapat duplikasi NIM di file: ' + dup);
+                    this.students = newStudents; this.isSortedByNim = false; this.log('Import JSON berhasil. ' + this.students.length + ' mahasiswa dimuat.'); saveToLocal(); updateTableUI();
+                } catch (e) {
+                    if (e instanceof SyntaxError) throw new AppException('JSON parse error.');
+                    throw e;
+                }
+            }
+
+            loadSampleData(sampleArray) {
+                this.students = sampleArray.map(it => new Student(it.name, String(it.nim)));
+                this.isSortedByNim = false; this.log('Sample data dimuat.'); saveToLocal(); updateTableUI();
+            }
+        }
+
+        /* -------------------------
+            Data & manager init
+            ------------------------- */
+        const manager = new StudentManager();
+
+        const SAMPLE_DATA = [
+            { name: 'afdal laia', nim: '241011402051' },
+            { name: 'dimas', nim: '241011400248' },
+            { name: 'Yehezkiel', nim: '241011402104' },
+            { name: 'Rozi', nim: '241011400231' },
+            { name: 'M Ichsan Fachrulrozi', nim: '241011400235' },
+            { name: 'Bayu Abiakso', nim: '241011400277' },
+            { name: 'firman gani', nim: '241011400233' },
+            { name: 'Jiwa', nim: '241011401525' },
+            { name: 'Medina', nim: '241011401536' },
+            { name: 'Aldo', nim: '241011401526' },
+            { name: 'Fadly', nim: '241011401528' },
+            { name: 'Cristian yuda', nim: '241011402026' },
+            { name: 'Fazri', nim: '241011402315' },
+            { name: 'AFFAN DHIYA DIL AWAR.', nim: '241011400266' },
+            { name: 'RidoMaulidan_', nim: '241011400232' },
+            { name: 'Muzayin', nim: '241011400261' },
+            { name: 'Sulthan Arya Satwika', nim: '241011401769' },
+            { name: 'Maikel', nim: '241011400276' },
+            { name: 'Fariz', nim: '241011400268' },
+            { name: 'Timothy', nim: '241011401936' },
+            { name: 'Rian', nim: '241011400228' },
+            { name: 'Syahrul', nim: '241011400253' },
+            { name: 'Faya', nim: '241011403270' },
+            { name: 'Lina', nim: '241011402755' },
+            { name: 'Ulya', nim: '241011401655' },
+            { name: 'Nia', nim: '241011400254' },
+            { name: 'Elis', nim: '241011402113' },
+            { name: 'Gilang', nim: '241011400269' },
+            { name: 'dika', nim: '221011401131' },
+            { name: 'zidan', nim: '241011400901' }
+        ];
+
+        /* -------------------------
+            UI refs & helpers
+            ------------------------- */
+        const tbody = document.querySelector('#studentsTable tbody');
+        const countInfo = document.getElementById('countInfo');
+        const statusEl = document.getElementById('status');
+        const logEl = document.getElementById('log');
+
+        function escapeHtml(s) { return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m])); }
+        function setStatus(t) { statusEl.textContent = t; }
+        function updateLogUI() { logEl.innerHTML = manager.logMsgs.slice(0, 200).map(s => `<div>${escapeHtml(s)}</div>`).join(''); }
+
+        /* -------------------------
+            localStorage persistence
+            ------------------------- */
+        const STORAGE_KEY = 'md_students_v1';
+        function saveToLocal() { try { localStorage.setItem(STORAGE_KEY, manager.exportJSON()); } catch (e) { console.warn('save failed', e); } }
+        function loadFromLocal() { const j = localStorage.getItem(STORAGE_KEY); if (j) { try { manager.importJSON(j); return true; } catch (e) { console.warn('load failed', e); } } return false; }
+
+        /* -------------------------
+            render table
+            ------------------------- */
+        function updateTableUI(highlightIndices = []) {
+            const rows = manager.getAll();
+            tbody.innerHTML = '';
+            rows.forEach((st, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${idx + 1}</td><td>${escapeHtml(st.getName())}</td><td>${escapeHtml(st.getNim())}</td>
+    <td>
+      <button data-idx="${idx}" class="editBtn">Edit</button>
+      <button data-idx="${idx}" class="delBtn" style="background:#fff0f1;border:1px solid #f5c2c7;padding:6px;border-radius:6px;color:var(--danger)">Hapus</button>
+    </td>`;
+                if (highlightIndices.includes(idx)) tr.classList.add('highlight');
+                tbody.appendChild(tr);
+            });
+            countInfo.textContent = `(${rows.length} mahasiswa)`;
+            setStatus('Tabel diperbarui.');
+        }
+
+        /* -------------------------
+            UI events (CRUD)
+            ------------------------- */
+        document.getElementById('addBtn').addEventListener('click', () => {
+            const name = document.getElementById('nameInput').value;
+            const nim = document.getElementById('nimInput').value;
+            try { manager.addStudent(name, nim); document.getElementById('nameInput').value = ''; document.getElementById('nimInput').value = ''; setStatus('Mahasiswa ditambahkan.'); } catch (e) { setStatus(e.message); manager.logMsgs.unshift('[ERR] ' + e.message); updateLogUI(); alert(e.message); }
+        });
+
+        tbody.addEventListener('click', (ev) => {
+            const btn = ev.target.closest('button'); if (!btn) return;
+            const idx = Number(btn.dataset.idx);
+            if (btn.classList.contains('editBtn')) {
+                const st = manager.getAll()[idx];
+                document.getElementById('nameInput').value = st.getName();
+                document.getElementById('nimInput').value = st.getNim();
+                document.getElementById('editIndex').value = idx;
+                document.getElementById('addBtn').style.display = 'none';
+                document.getElementById('saveBtn').style.display = 'inline-block';
+                document.getElementById('cancelBtn').style.display = 'inline-block';
+                setStatus('Edit mode');
+            } else if (btn.classList.contains('delBtn')) {
+                if (!confirm('Yakin hapus?')) return;
+                try { manager.deleteStudent(idx); setStatus('Data dihapus.'); } catch (e) { setStatus(e.message); manager.logMsgs.unshift('[ERR] ' + e.message); updateLogUI(); alert(e.message); }
+            }
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            const idx = Number(document.getElementById('editIndex').value);
+            const name = document.getElementById('nameInput').value;
+            const nim = document.getElementById('nimInput').value;
+            try { manager.editStudent(idx, name, nim); document.getElementById('editIndex').value = ''; document.getElementById('nameInput').value = ''; document.getElementById('nimInput').value = ''; document.getElementById('addBtn').style.display = 'inline-block'; document.getElementById('saveBtn').style.display = 'none'; document.getElementById('cancelBtn').style.display = 'none'; setStatus('Perubahan tersimpan.'); } catch (e) { setStatus(e.message); manager.logMsgs.unshift('[ERR] ' + e.message); updateLogUI(); alert(e.message); }
+        });
+
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            document.getElementById('editIndex').value = ''; document.getElementById('nameInput').value = ''; document.getElementById('nimInput').value = ''; document.getElementById('addBtn').style.display = 'inline-block'; document.getElementById('saveBtn').style.display = 'none'; document.getElementById('cancelBtn').style.display = 'none'; setStatus('Edit dibatalkan.');
+        });
+
+        /* -------------------------
+            Sort handlers
+            ------------------------- */
+        const complexityMap = { insertion: 'Insertion — Worst O(n²) Best O(n)', merge: 'Merge — O(n log n)', bubble: 'Bubble — O(n²)', selection: 'Selection — O(n²)' };
+        document.getElementById('sortAlgo').addEventListener('change', (e) => document.getElementById('sortComplexity').textContent = complexityMap[e.target.value] || '');
+        document.getElementById('sortComplexity').textContent = complexityMap[document.getElementById('sortAlgo').value];
+
+        document.getElementById('sortBtn').addEventListener('click', () => {
+            const f = document.getElementById('sortField').value;
+            const a = document.getElementById('sortAlgo').value;
+            try {
+                if (a === 'insertion') manager.insertionSort(f);
+                else if (a === 'merge') manager.mergeSort(f);
+                else if (a === 'bubble') manager.bubbleSort(f);
+                else if (a === 'selection') manager.selectionSort(f);
+                setStatus('Diurutkan (' + a + ' by ' + f + ')');
+            } catch (e) { setStatus(e.message); manager.logMsgs.unshift('[ERR] ' + e.message); updateLogUI(); alert(e.message); }
+        });
+
+        /* -------------------------
+            Search handlers
+            ------------------------- */
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const q = document.getElementById('searchInput').value;
+            const a = document.getElementById('searchAlgo').value;
+            if (!q.trim()) { updateTableUI(); setStatus('Pencarian direset.'); return; }
+            let highlightIndices = [];
+            try {
+                if (a === 'binary') {
+                    const idx = manager.binarySearchByNim(q);
+                    if (idx !== -1) highlightIndices.push(idx);
+                } else {
+                    highlightIndices = manager.linearSearch(q); // linear, sequential
+                }
+                updateTableUI(highlightIndices);
+                setStatus(`Pencarian (${a}) untuk "${q}" selesai. ${highlightIndices.length} hasil.`);
+            } catch (e) { setStatus(e.message); manager.logMsgs.unshift('[ERR] ' + e.message); updateLogUI(); alert(e.message); }
+        });
+
+        document.getElementById('clearSearchBtn').addEventListener('click', () => {
+            document.getElementById('searchInput').value = '';
+            updateTableUI();
+            setStatus('Pencarian direset.');
+        });
+
+        /* -------------------------
+            File I/O handlers
+            ------------------------- */
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            const dataStr = manager.exportJSON();
+            const dl = document.createElement('a');
+            dl.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(dataStr));
+            dl.setAttribute('download', 'mahasiswa_data_' + new Date().toISOString().slice(0, 10) + '.json');
+            dl.click();
+            setStatus('JSON berhasil di-download.');
+        });
+
+        document.getElementById('uploadBtn').addEventListener('click', () => {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) { setStatus('Pilih file JSON dulu.'); return; }
+            if (file.type !== 'application/json') { setStatus('File harus berformat JSON.'); return; }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    manager.importJSON(e.target.result);
+                    setStatus('Data berhasil di-upload dari file.');
+                } catch (e) { setStatus(e.message); manager.logMsgs.unshift('[ERR] ' + e.message); updateLogUI(); alert(e.message); }
+            };
+            reader.readAsText(file);
+        });
+
+        /* -------------------------
+            Misc handlers
+            ------------------------- */
+        document.getElementById('clearAllBtn').addEventListener('click', () => {
+            if (!confirm('Yakin ingin menghapus SEMUA data?')) return;
+            manager.clearAll();
+            setStatus('Semua data dihapus.');
+        });
+
+        document.getElementById('loadSampleBtn').addEventListener('click', () => {
+            if (!confirm('Yakin ingin memuat data sampel? Data yang ada akan ditimpa.')) return;
+            try {
+                manager.loadSampleData(SAMPLE_DATA);
+                setStatus('Data sampel dimuat.');
+            } catch (e) { setStatus(e.message); manager.logMsgs.unshift('[ERR] ' + e.message); updateLogUI(); alert(e.message); }
+        });
+
+
+        /* -------------------------
+            Login/Logout logic
+            ------------------------- */
+        const LOGIN_NAME = 'yehezkiel';
+        const LOGIN_PASS = '150406';
+
+        function checkLoginStatus() {
+            const loggedInUser = localStorage.getItem('md_user');
+            if (loggedInUser === LOGIN_NAME) {
+                document.getElementById('loginWrap').style.display = 'none';
+                // PENTING: Gunakan display: block, bukan flex, agar max-width window 1100px berlaku
+                // dan elemen-elemen di dalamnya tetap rapi.
+                document.getElementById('app').style.display = 'block';
+                document.getElementById('userBadge').textContent = loggedInUser;
+                if (!loadFromLocal()) {
+                    manager.log('Selamat datang! Gunakan "Load Sample" atau tambah data.');
+                }
+                updateTableUI();
+            } else {
+                // Saat logout, gunakan flex untuk menengahkan login card.
+                document.getElementById('loginWrap').style.display = 'flex';
+                document.getElementById('app').style.display = 'none';
+            }
+        }
+
+        function doLogin() {
+            const name = document.getElementById('loginName').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const errorEl = document.getElementById('loginError');
+
+            errorEl.textContent = '';
+            if (name === LOGIN_NAME && pass === LOGIN_PASS) {
+                localStorage.setItem('md_user', LOGIN_NAME);
+                checkLoginStatus();
+            } else {
+                errorEl.textContent = 'Nama atau Password salah.';
+            }
+        }
+
+        function doLogout() {
+            localStorage.removeItem('md_user');
+            document.getElementById('loginName').value = '';
+            document.getElementById('loginPass').value = '';
+            checkLoginStatus();
+        }
+
+        function fillDemo() {
+            document.getElementById('loginName').value = LOGIN_NAME;
+            document.getElementById('loginPass').value = LOGIN_PASS;
+        }
+
+
+        // Initial check on load
+        checkLoginStatus();
+
+    </script>
+</body>
+
+</html>
